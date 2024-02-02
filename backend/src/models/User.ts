@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import bcrypt from "bcryptjs";
+import Joi from "joi";
 
 export type UserType = {
   _id: string;
@@ -32,10 +33,30 @@ const userSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+export function validateRegisterUser(obj: any) {
+  const schema = Joi.object({
+    email: Joi.string().trim().required(),
+    password: Joi.string().trim().min(6).required(),
+    firstName: Joi.string().trim().min(2).max(100).required(),
+    lastName: Joi.string().trim().min(2).max(100).required(),
+  });
+
+  return schema.validate(obj);
+}
+
+export function validateLoginUser(obj: any) {
+  const schema = Joi.object({
+    email: Joi.string().trim().required(),
+    password: Joi.string().trim().min(6).required(),
+  });
+  return schema.validate(obj);
+}
+
 userSchema.pre("save", async function (next) {
   if (this.isModified("password")) {
     this.password = await bcrypt.hash(this.password, 10);
   }
+  next();
 });
 
 const User = mongoose.model<UserType>("User", userSchema);

@@ -2,17 +2,16 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import "dotenv/config";
 import { connectToDB } from "./config/db";
+import userRoutes from "./routes/users";
 
 const app = express();
 connectToDB();
 
 app.use(express.json());
-app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
-app.get("/api/test", (req: Request, res: Response) => {
-  res.json({ msg: "hi from server" });
-});
+app.use("/api/users", userRoutes);
 
 const PORT = process.env.PORT || 8001;
 app.listen(PORT, () => {
