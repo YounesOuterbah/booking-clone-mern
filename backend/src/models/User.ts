@@ -39,6 +39,7 @@ export function validateRegisterUser(obj: any) {
     password: Joi.string().trim().min(6).required(),
     firstName: Joi.string().trim().min(2).max(100).required(),
     lastName: Joi.string().trim().min(2).max(100).required(),
+    confirmPassword: Joi.string().trim().min(2).max(100).required(),
   });
 
   return schema.validate(obj);
